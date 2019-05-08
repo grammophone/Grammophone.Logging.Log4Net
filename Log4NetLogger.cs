@@ -45,29 +45,11 @@ namespace Grammophone.Logging.Log4Net
 		/// </remarks>
 		public void Log(LogLevel logLevel, string message, params object[] arguments)
 		{
-			switch (logLevel)
-			{
-				case LogLevel.Trace:
-				case LogLevel.Debug:
-					log.DebugFormat(message, arguments);
-					break;
+			string formattedMessage = String.Format(message, arguments);
 
-				case LogLevel.Warn:
-					log.WarnFormat(message, arguments);
-					break;
+			log4net.Core.Level log4netLevel = TranslateToLog4netLevel(logLevel);
 
-				case LogLevel.Error:
-					log.ErrorFormat(message, arguments);
-					break;
-
-				case LogLevel.Fatal:
-					log.FatalFormat(message, arguments);
-					break;
-
-				default:
-					log.InfoFormat(message, arguments);
-					break;
-			}
+			log.Logger.Log(GetType(), log4netLevel, formattedMessage, null);
 		}
 
 		/// <summary>
@@ -88,29 +70,9 @@ namespace Grammophone.Logging.Log4Net
 		{
 			string formattedMessage = String.Format(message, arguments);
 
-			switch (logLevel)
-			{
-				case LogLevel.Trace:
-				case LogLevel.Debug:
-					log.Debug(formattedMessage, exception);
-					break;
+			log4net.Core.Level log4netLevel = TranslateToLog4netLevel(logLevel);
 
-				case LogLevel.Warn:
-					log.Warn(formattedMessage, exception);
-					break;
-
-				case LogLevel.Error:
-					log.Error(formattedMessage, exception);
-					break;
-
-				case LogLevel.Fatal:
-					log.Fatal(formattedMessage, exception);
-					break;
-
-				default:
-					log.Info(formattedMessage, exception);
-					break;
-			}
+			log.Logger.Log(GetType(), log4netLevel, formattedMessage, exception);
 		}
 
 		/// <summary>
@@ -128,29 +90,11 @@ namespace Grammophone.Logging.Log4Net
 		/// </remarks>
 		public void Log(LogLevel logLevel, IFormatProvider formatProvider, string message, params object[] arguments)
 		{
-			switch (logLevel)
-			{
-				case LogLevel.Trace:
-				case LogLevel.Debug:
-					log.DebugFormat(formatProvider, message, arguments);
-					break;
+			string formattedMessage = String.Format(formatProvider, message, arguments);
 
-				case LogLevel.Warn:
-					log.WarnFormat(formatProvider, message, arguments);
-					break;
+			log4net.Core.Level log4netLevel = TranslateToLog4netLevel(logLevel);
 
-				case LogLevel.Error:
-					log.ErrorFormat(formatProvider, message, arguments);
-					break;
-
-				case LogLevel.Fatal:
-					log.FatalFormat(formatProvider, message, arguments);
-					break;
-
-				default:
-					log.InfoFormat(formatProvider, message, arguments);
-					break;
-			}
+			log.Logger.Log(GetType(), log4netLevel, formattedMessage, null);
 		}
 
 		/// <summary>
@@ -171,28 +115,39 @@ namespace Grammophone.Logging.Log4Net
 		{
 			string formattedMessage = String.Format(formatProvider, message, arguments);
 
+			log4net.Core.Level log4netLevel = TranslateToLog4netLevel(logLevel);
+
+			log.Logger.Log(GetType(), log4netLevel, formattedMessage, exception);
+		}
+
+		#endregion
+
+		#region Private methods
+
+		/// <summary>
+		/// Translate log level to log4net.
+		/// </summary>
+		private static log4net.Core.Level TranslateToLog4netLevel(LogLevel logLevel)
+		{
 			switch (logLevel)
 			{
 				case LogLevel.Trace:
+					return log4net.Core.Level.Trace;
+
 				case LogLevel.Debug:
-					log.Debug(formattedMessage, exception);
-					break;
+					return log4net.Core.Level.Debug;
 
 				case LogLevel.Warn:
-					log.Warn(formattedMessage, exception);
-					break;
+					return log4net.Core.Level.Warn;
 
 				case LogLevel.Error:
-					log.Error(formattedMessage, exception);
-					break;
+					return log4net.Core.Level.Error;
 
 				case LogLevel.Fatal:
-					log.Fatal(formattedMessage, exception);
-					break;
+					return log4net.Core.Level.Fatal;
 
 				default:
-					log.Info(formattedMessage, exception);
-					break;
+					return log4net.Core.Level.Info;
 			}
 		}
 
