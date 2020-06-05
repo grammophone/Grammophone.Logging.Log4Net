@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,13 +13,13 @@ namespace Grammophone.Logging.Log4Net
 	public class Log4NetLoggerProvider : ILoggerProvider
 	{
 		/// <summary>
-		/// Returns a logger based on <see cref="log4net.LogManager.GetLogger(string)"/>.
+		/// Returns a logger based on <see cref="log4net.LogManager.GetLogger(Assembly, string)"/>.
 		/// </summary>
 		/// <param name="loggerName">The name of the logger.</param>
 		/// <returns>Returns a <see cref="Log4NetLogger"/>.</returns>
 		public ILogger CreateLogger(string loggerName)
 		{
-			var log = log4net.LogManager.GetLogger(loggerName);
+			var log = log4net.LogManager.GetLogger(Assembly.GetCallingAssembly(), loggerName);
 
 			return new Log4NetLogger(log);
 		}
